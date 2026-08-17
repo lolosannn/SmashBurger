@@ -168,33 +168,6 @@ h1, h2, h3, h4 {
 .btn--sm { padding: 10px 20px; font-size: 0.9rem; }
 
 /* =========================================================
-   Sticker badge
-   ========================================================= */
-.sticker {
-  display: inline-flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  background: var(--cream-light);
-  border: var(--border-thin);
-  border-radius: 40% 60% 55% 45% / 50% 45% 55% 50%;
-  box-shadow: var(--shadow-hard);
-  padding: 16px 20px;
-  transform: rotate(-8deg);
-  text-align: center;
-}
-
-.sticker span {
-  font-family: var(--font-display);
-  font-weight: 600;
-  font-size: 1.1rem;
-  color: var(--yellow-dark);
-  -webkit-text-stroke: 1px var(--ink);
-  line-height: 1.15;
-  text-transform: uppercase;
-}
-
-/* =========================================================
    Preloader
    ========================================================= */
 #preloader,
@@ -466,13 +439,6 @@ h1, h2, h3, h4 {
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-.hero-sticker {
-  position: absolute;
-  top: -8px;
-  right: -6px;
-  z-index: 3;
 }
 
 /* CSS burger illustration */
