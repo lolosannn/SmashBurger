@@ -14,15 +14,38 @@
 <body class="no-scroll">
 
 <!-- ============ PRELOADER ============ -->
+<svg width="0" height="0" style="position: absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <clipPath id="waveClip" clipPathUnits="objectBoundingBox">
+      <path d="M0,0 H1 V0.82 C0.958,0.9 0.917,0.9 0.875,0.82 C0.833,0.74 0.792,0.74 0.75,0.82 C0.708,0.9 0.667,0.9 0.625,0.82 C0.583,0.74 0.542,0.74 0.5,0.82 C0.458,0.9 0.417,0.9 0.375,0.82 C0.333,0.74 0.292,0.74 0.25,0.82 C0.208,0.9 0.167,0.9 0.125,0.82 C0.083,0.74 0.042,0.74 0,0.82 Z" />
+    </clipPath>
+  </defs>
+</svg>
+
 <div id="preloader">
-  <div class="preloader-inner">
-    <span class="preloader-word">SMASH</span>
-    <div class="preloader-bar-track">
-      <div class="preloader-bar-fill" id="preloaderBar"></div>
-    </div>
-    <div class="preloader-count">Cocinando la web… <span id="preloaderCounter">0</span>%</div>
+  <div class="preload-logo">
+    <span class="logo-smash">SMASH</span>
+    <span class="logo-burger">BURGER</span>
+  </div>
+
+  <div class="css-burger preload-burger" aria-hidden="true">
+    <div class="bun-top"></div>
+    <div class="lettuce"></div>
+    <div class="cheese"></div>
+    <div class="patty"></div>
+    <div class="tomato"></div>
+    <div class="bun-bottom"></div>
+  </div>
+
+  <p class="preload-status" id="preloadStatus">Prendiendo la plancha…</p>
+
+  <div class="preload-bar" aria-hidden="true">
+    <div class="preload-bar-fill" id="preloadBarFill"></div>
   </div>
 </div>
+
+<div class="reveal-layer reveal-layer--orange" id="revealOrange" aria-hidden="true"></div>
+<div class="reveal-layer reveal-layer--maroon" id="revealMaroon" aria-hidden="true"></div>
 
 <!-- ============ HEADER ============ -->
 <header class="site-header" id="siteHeader">
