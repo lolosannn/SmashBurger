@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex, nofollow" />
+<title>Smash Burger — Panel de fotos</title>
+<style>
+  :root {
+    --bg: #14161a;
+    --panel: #1e2127;
+    --panel-2: #262a32;
+    --border: #343943;
+    --text: #eef0f3;
+    --text-dim: #9aa1ad;
+    --accent: #e8382b;
+    --ok: #3ba96c;
+    --err: #e05252;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    padding: 32px 20px 80px;
+  }
+  .wrap { max-width: 880px; margin: 0 auto; }
+  h1 { font-size: 1.5rem; margin: 0 0 6px; }
+  .subtitle { color: var(--text-dim); margin: 0 0 28px; font-size: 0.95rem; }
+  .warning {
+    background: #3a2a12;
+    border: 1px solid #6b4a1a;
+    color: #f0c37a;
+    border-radius: 10px;
+    padding: 14px 16px;
+    font-size: 0.88rem;
+    line-height: 1.5;
+    margin-bottom: 28px;
+  }
+  .warning a { color: #ffd48a; }
+
+  .panel {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px;
+    margin-bottom: 24px;
+  }
+  .panel h2 {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-dim);
+    margin: 0 0 14px;
+  }
+
+  label { display: block; font-size: 0.85rem; margin-bottom: 6px; color: var(--text-dim); }
+  input[type="password"], input[type="text"] {
+    width: 100%;
+    background: var(--panel-2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 10px 12px;
+    border-radius: 8px;
+    font-size: 0.95rem;
+  }
+  input[type="password"]:focus, input[type="text"]:focus { outline: 2px solid var(--accent); }
+
+  .row { display: flex; align-items: center; gap: 8px; margin-top: 10px; font-size: 0.85rem; color: var(--text-dim); }
+  .row input[type="checkbox"] { width: auto; }
+
+  .small { font-size: 0.8rem; color: var(--text-dim); margin-top: 10px; line-height: 1.5; }
+  .small a { color: var(--text); }
+
+  .config-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 4px; }
+  .config-grid .full { grid-column: 1 / -1; }
+
+  .slots { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 16px; }
+
+  .slot {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  .slot-thumb {
+    aspect-ratio: 4 / 3;
+    background: var(--panel-2) center/cover no-repeat;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-dim);
+    font-size: 0.8rem;
+    position: relative;
+  }
+  .slot-thumb.has-image { color: transparent; }
+  .slot-body { padding: 14px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
+  .slot-name { font-weight: 600; font-size: 0.95rem; }
+  .slot-path { font-size: 0.78rem; color: var(--text-dim); font-family: ui-monospace, monospace; }
+
+  .dropzone {
+    border: 1.5px dashed var(--border);
+    border-radius: 10px;
+    padding: 12px;
+    text-align: center;
+    font-size: 0.82rem;
+    color: var(--text-dim);
+    cursor: pointer;
+    transition: border-color 0.15s ease, background 0.15s ease;
+  }
+  .dropzone:hover, .dropzone.drag { border-color: var(--accent); background: rgba(232, 56, 43, 0.08); }
+  .dropzone input { display: none; }
+
+  .status { font-size: 0.8rem; min-height: 1.2em; }
+  .status.ok { color: var(--ok); }
+  .status.err { color: var(--err); }
+  .status.busy { color: var(--text-dim); }
+
+  .top-links { margin-bottom: 24px; font-size: 0.85rem; }
+  .top-links a { color: var(--text-dim); margin-right: 16px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top-links">
+    <a href="index.html">← Ver el sitio</a>
+    <a href="https://github.com/lolosannn/SmashBurger" target="_blank" rel="noopener">Repo en GitHub ↗</a>
+  </div>
+
+  <h1>Panel de fotos — Smash Burger</h1>
+  <p class="subtitle">Subí cada foto directo al repo, sin pasar por GitHub. Se guarda con el nombre correcto automáticamente.</p>
+
+  <div class="warning">
+    <strong>Uso interno.</strong> No compartas esta página ni el link con nadie. Usá un token
+    <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">fine-grained</a>
+    limitado al repo <code>lolosannn/SmashBurger</code>, con permiso <strong>Contents: Read and write</strong> únicamente
+    (nada más). El token solo se usa desde tu navegador para hablar con la API de GitHub — no pasa por ningún servidor
+    intermedio ni se guarda en el repo.
+  </div>
+
+  <div class="panel">
+    <h2>Acceso</h2>
+    <label for="token">GitHub Token</label>
+    <input type="password" id="token" placeholder="github_pat_..." autocomplete="off" />
+    <div class="row">
+      <input type="checkbox" id="remember" />
+      <label for="remember" style="margin:0;">Recordar en este navegador (localStorage)</label>
+    </div>
+
+    <div class="config-grid" style="margin-top:16px;">
+      <div>
+        <label for="cfgOwner">Owner</label>
+        <input type="text" id="cfgOwner" value="lolosannn" />
+      </div>
+      <div>
+        <label for="cfgRepo">Repo</label>
+        <input type="text" id="cfgRepo" value="SmashBurger" />
+      </div>
+      <div class="full">
+        <label for="cfgBranch">Branch</label>
+        <input type="text" id="cfgBranch" value="claude/burger-shop-web-design-exe4jr" />
+      </div>
+    </div>
+    <p class="small">Si más adelante mergeás a <code>main</code>, cambiá el branch de acá arriba.</p>
+  </div>
+
+  <div class="panel">
+    <h2>Fotos</h2>
+    <div class="slots" id="slots"></div>
+  </div>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  var SLOTS = [
+    { key: "hero-tokyo.png", label: "Portada (hero) — Tokyo" },
+    { key: "tokyo.jpg", label: "Menú — Tokyo" },
+    { key: "denver.jpg", label: "Menú — Denver" },
+    { key: "sinaloa.jpg", label: "Menú — Sinaloa" },
+    { key: "kiev.jpg", label: "Menú — Kiev" },
+    { key: "miami.jpg", label: "Menú — Miami" }
+  ];
+
+  var tokenInput = document.getElementById("token");
+  var rememberBox = document.getElementById("remember");
+  var slotsEl = document.getElementById("slots");
+
+  var saved = localStorage.getItem("sb_admin_token");
+  if (saved) {
+    tokenInput.value = saved;
+    rememberBox.checked = true;
+  }
+
+  rememberBox.addEventListener("change", syncRemember);
+  tokenInput.addEventListener("input", syncRemember);
+
+  function syncRemember() {
+    if (rememberBox.checked && tokenInput.value) {
+      localStorage.setItem("sb_admin_token", tokenInput.value);
+    } else {
+      localStorage.removeItem("sb_admin_token");
+    }
+  }
+
+  function cfg() {
+    return {
+      owner: document.getElementById("cfgOwner").value.trim(),
+      repo: document.getElementById("cfgRepo").value.trim(),
+      branch: document.getElementById("cfgBranch").value.trim(),
+      token: tokenInput.value.trim()
+    };
+  }
+
+  function apiUrl(c, path) {
+    return "https://api.github.com/repos/" + c.owner + "/" + c.repo + "/contents/" + path;
+  }
+
+  function rawUrl(c, path) {
+    return "https://raw.githubusercontent.com/" + c.owner + "/" + c.repo + "/" + c.branch + "/" + path + "?t=" + Date.now();
+  }
+
+  function fileToBase64(file) {
+    return new Promise(function (resolve, reject) {
+      var reader = new FileReader();
+      reader.onload = function () { resolve(reader.result.split(",")[1]); };
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  }
+
+  function authHeaders(c) {
+    return { Authorization: "token " + c.token, Accept: "application/vnd.github+json" };
+  }
+
+  function getExistingSha(c, path) {
+    return fetch(apiUrl(c, path) + "?ref=" + encodeURIComponent(c.branch), { headers: authHeaders(c) })
+      .then(function (res) {
+        if (res.status === 200) return res.json().then(function (j) { return j.sha; });
+        return null;
+      })
+      .catch(function () { return null; });
+  }
+
+  function uploadFile(c, path, file) {
+    return Promise.all([fileToBase64(file), getExistingSha(c, path)]).then(function (r) {
+      var base64 = r[0], sha = r[1];
+      var body = {
+        message: "Update " + path + " via admin panel",
+        content: base64,
+        branch: c.branch
+      };
+      if (sha) body.sha = sha;
+      return fetch(apiUrl(c, path), {
+        method: "PUT",
+        headers: Object.assign({ "Content-Type": "application/json" }, authHeaders(c)),
+        body: JSON.stringify(body)
+      }).then(function (res) {
+        if (!res.ok) {
+          return res.json().then(function (err) {
+            throw new Error(err.message || res.statusText);
+          });
+        }
+        return res.json();
+      });
+    });
+  }
+
+  function buildSlot(slot) {
+    var el = document.createElement("div");
+    el.className = "slot";
+
+    var thumb = document.createElement("div");
+    thumb.className = "slot-thumb";
+    thumb.textContent = "Sin foto todavía";
+
+    var body = document.createElement("div");
+    body.className = "slot-body";
+
+    var name = document.createElement("div");
+    name.className = "slot-name";
+    name.textContent = slot.label;
+
+    var pathEl = document.createElement("div");
+    pathEl.className = "slot-path";
+    pathEl.textContent = "images/" + slot.key;
+
+    var drop = document.createElement("label");
+    drop.className = "dropzone";
+    drop.textContent = "Click o arrastrá una imagen acá";
+    var input = document.createElement("input");
+    input.type = "file";
+    input.accept = "image/*";
+    drop.appendChild(input);
+
+    var status = document.createElement("div");
+    status.className = "status";
+
+    body.appendChild(name);
+    body.appendChild(pathEl);
+    body.appendChild(drop);
+    body.appendChild(status);
+    el.appendChild(thumb);
+    el.appendChild(body);
+    slotsEl.appendChild(el);
+
+    function setThumb(url) {
+      thumb.style.backgroundImage = "url('" + url + "')";
+      thumb.classList.add("has-image");
+      thumb.textContent = "";
+    }
+
+    function handleFile(file) {
+      if (!file) return;
+      var c = cfg();
+      if (!c.token) {
+        status.textContent = "Falta el token de GitHub (arriba).";
+        status.className = "status err";
+        return;
+      }
+
+      var localPreview = URL.createObjectURL(file);
+      setThumb(localPreview);
+
+      status.textContent = "Subiendo…";
+      status.className = "status busy";
+
+      uploadFile(c, "images/" + slot.key, file)
+        .then(function () {
+          status.textContent = "Listo ✓ subida a " + c.branch;
+          status.className = "status ok";
+        })
+        .catch(function (err) {
+          status.textContent = "Error: " + err.message;
+          status.className = "status err";
+        });
+    }
+
+    input.addEventListener("change", function () {
+      handleFile(input.files[0]);
+    });
+
+    ["dragover", "dragenter"].forEach(function (evt) {
+      drop.addEventListener(evt, function (e) {
+        e.preventDefault();
+        drop.classList.add("drag");
+      });
+    });
+    ["dragleave", "dragend", "drop"].forEach(function (evt) {
+      drop.addEventListener(evt, function () { drop.classList.remove("drag"); });
+    });
+    drop.addEventListener("drop", function (e) {
+      e.preventDefault();
+      var file = e.dataTransfer.files && e.dataTransfer.files[0];
+      if (file) handleFile(file);
+    });
+
+    // Try to load an existing preview from the branch (works even without a token, public repo).
+    var probe = new Image();
+    probe.onload = function () { setThumb(probe.src); };
+    probe.onerror = function () { /* no existing file yet, keep placeholder */ };
+    probe.src = rawUrl(cfg(), "images/" + slot.key);
+  }
+
+  SLOTS.forEach(buildSlot);
+})();
+</script>
+</body>
+</html>
