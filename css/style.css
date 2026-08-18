@@ -442,7 +442,7 @@ h1, h2, h3, h4 {
 }
 
 .hero-cutout {
-  width: min(460px, 90vw);
+  width: min(680px, 50vw);
   max-width: none;
   height: auto;
   filter: drop-shadow(0 30px 34px rgba(36, 20, 8, 0.35));
@@ -935,7 +935,7 @@ h1, h2, h3, h4 {
   .hero-actions, .hero-stats { justify-content: center; }
   .hero-stats div { text-align: center; }
   .hero-visual { order: -1; margin-top: 0; margin-bottom: 8px; }
-  .hero-cutout { width: min(600px, 98vw); }
+  .hero-cutout { width: min(700px, 108vw); }
 
   .about .container { grid-template-columns: 1fr; }
   .about-visual { max-width: 380px; margin: 0 auto; }
