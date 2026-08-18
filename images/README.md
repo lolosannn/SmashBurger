@@ -1,5 +1,9 @@
 # Fotos del menú
 
+⚠️ **Las fotos actuales son placeholders de demo**, sacadas de repos públicos de GitHub
+(no hay licencia clara para uso comercial). Sirven para ver el diseño funcionando, pero
+**hay que reemplazarlas por fotos propias o compradas antes de lanzar el sitio de verdad.**
+
 Subí acá estos 5 archivos con estos nombres exactos (minúsculas, sin espacios) para que
 `index.html` los tome automáticamente:
 
