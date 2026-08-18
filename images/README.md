@@ -4,16 +4,19 @@
 (no hay licencia clara para uso comercial). Sirven para ver el diseño funcionando, pero
 **hay que reemplazarlas por fotos propias o compradas antes de lanzar el sitio de verdad.**
 
-Subí acá estos 5 archivos con estos nombres exactos (minúsculas, sin espacios) para que
+Subí acá estos archivos con estos nombres exactos (minúsculas, sin espacios) para que
 `index.html` los tome automáticamente:
 
-- `tokyo.jpg` — usada también como foto principal del hero
+- `hero-tokyo.png` — foto de portada (hero), recortada / sin fondo (PNG con transparencia)
+- `tokyo.jpg` — foto de la card "Tokyo" en el menú (foto normal, con fondo)
 - `denver.jpg`
 - `sinaloa.jpg`
 - `kiev.jpg`
 - `miami.jpg`
 
-Formato recomendado: JPG o WEBP, orientación horizontal o cuadrada, al menos 800px de ancho.
+Formato recomendado para las cards del menú: JPG o WEBP, orientación horizontal o cuadrada,
+al menos 800px de ancho. Para `hero-tokyo.png`: PNG con fondo transparente, recorte ajustado
+a la hamburguesa (sin recuadro blanco alrededor).
 
 Cómo subirlas desde GitHub (sin necesidad de git en la terminal):
 
