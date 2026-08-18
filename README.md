@@ -24,13 +24,13 @@ js/main.js         # preloader, header on scroll, menú mobile
 - **Paleta**: fondo crema (`--cream`), rojo (`--red`) y amarillo mostaza (`--yellow`) sobre tinta oscura (`--ink`), inspirada en el estilo "sticker / die-cut" (bordes gruesos + sombra dura desplazada).
 - **Tipografías**: [Fredoka](https://fonts.google.com/specimen/Fredoka) para títulos/branding, [Nunito](https://fonts.google.com/specimen/Nunito) para texto de cuerpo.
 - **Preloader**: contador 0→100% con reveal tipo cortina, inspirado en la pantalla de carga de referencia. El resto del sitio es intencionalmente estático — sin scroll-animations ni parallax, solo transiciones cortas en hover/click.
-- **Gráficos**: la hamburguesa y los íconos son 100% CSS/SVG (no hay fotos), para no depender de assets externos. Reemplazá `.css-burger` por fotos reales cuando las tengas.
+- **Gráficos**: la burger del preloader y de la sección "Nosotros" son 100% CSS/SVG. El hero y las cards del menú usan fotos reales (ver `images/`).
 
 ## Pendiente de personalizar
 
+- Subir las 5 fotos a `images/` (ver `images/README.md` para los nombres exactos).
 - Dirección, teléfono y horarios reales (sección `#ubicacion` y footer).
 - Link de WhatsApp (`https://wa.me/...`) en el botón "Pedir por WhatsApp".
-- Precios y nombres del menú (`#menu`).
 - Redes sociales (los `href="#"` en el footer).
 - Reemplazar el mapa placeholder por un embed real (Google Maps) si querés uno interactivo.
 
