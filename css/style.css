@@ -933,7 +933,8 @@ h1, h2, h3, h4 {
   .hero-copy p { margin-inline: auto; }
   .hero-actions, .hero-stats { justify-content: center; }
   .hero-stats div { text-align: center; }
-  .hero-visual { margin-top: 20px; }
+  .hero-visual { order: -1; margin-top: 0; margin-bottom: 8px; }
+  .hero-cutout { width: min(480px, 92vw); }
 
   .about .container { grid-template-columns: 1fr; }
   .about-visual { max-width: 380px; margin: 0 auto; }
