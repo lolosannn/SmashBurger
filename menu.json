@@ -1,0 +1,42 @@
+[
+  {
+    "id": "tokyo",
+    "name": "Tokyo",
+    "description": "Medallón smasheado, cheddar derretido, lechuga fresca y tomate.",
+    "price": "$15.900",
+    "tag": "La original",
+    "image": "images/tokyo.jpg"
+  },
+  {
+    "id": "denver",
+    "name": "Denver",
+    "description": "Doble medallón smasheado, cheddar, pepinillos y nuestros aderezos de la casa.",
+    "price": "$17.800",
+    "tag": "Doble",
+    "image": "images/denver.jpg"
+  },
+  {
+    "id": "sinaloa",
+    "name": "Sinaloa",
+    "description": "Doble medallón smasheado, cheddar, cebolla, ketchup y mostaza.",
+    "price": "$17.200",
+    "tag": "Doble",
+    "image": "images/sinaloa.jpg"
+  },
+  {
+    "id": "kiev",
+    "name": "Kiev",
+    "description": "Medallón grande smasheado con explosión de queso dambo y panceta bien crocante.",
+    "price": "$18.900",
+    "tag": "Explosión de queso",
+    "image": "images/kiev.jpg"
+  },
+  {
+    "id": "miami",
+    "name": "Miami",
+    "description": "Doble medallón smasheado, salsa BBQ ahumada y cebolla crispy.",
+    "price": "$19.500",
+    "tag": "Ahumada",
+    "image": "images/miami.jpg"
+  }
+]

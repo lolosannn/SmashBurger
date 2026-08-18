@@ -96,4 +96,42 @@
       navToggle.setAttribute("aria-expanded", "false");
     }
   });
+
+  /* ---------- Menu: rendered from menu.json ---------- */
+  var menuGrid = document.getElementById("menuGrid");
+
+  function escapeHtml(str) {
+    var div = document.createElement("div");
+    div.textContent = String(str == null ? "" : str);
+    return div.innerHTML;
+  }
+
+  function renderMenu(items) {
+    if (!items.length) {
+      menuGrid.innerHTML = '<p class="menu-loading">Todavía no hay platos cargados.</p>';
+      return;
+    }
+    menuGrid.innerHTML = items.map(function (item) {
+      return (
+        '<article class="menu-card">' +
+          '<div class="menu-card__photo">' +
+            '<img src="' + escapeHtml(item.image) + '" alt="Burger ' + escapeHtml(item.name) + '" loading="lazy" />' +
+            '<span class="price-tag">' + escapeHtml(item.price) + '</span>' +
+          '</div>' +
+          '<h3>' + escapeHtml(item.name) + '</h3>' +
+          '<p>' + escapeHtml(item.description) + '</p>' +
+          '<div class="menu-card__footer">' +
+            '<span class="tag-pill">' + escapeHtml(item.tag) + '</span>' +
+          '</div>' +
+        '</article>'
+      );
+    }).join("");
+  }
+
+  fetch("menu.json", { cache: "no-store" })
+    .then(function (res) { return res.json(); })
+    .then(renderMenu)
+    .catch(function () {
+      menuGrid.innerHTML = '<p class="menu-loading">No pudimos cargar el menú. Volvé a intentar más tarde.</p>';
+    });
 })();

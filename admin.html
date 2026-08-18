@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <meta name="robots" content="noindex, nofollow" />
-<title>Smash Burger — Panel de fotos</title>
+<title>Smash Burger — Panel de administración</title>
 <style>
   :root {
     --bg: #14161a;
@@ -14,6 +14,7 @@
     --text: #eef0f3;
     --text-dim: #9aa1ad;
     --accent: #e8382b;
+    --accent-2: #f7b500;
     --ok: #3ba96c;
     --err: #e05252;
   }
@@ -23,10 +24,11 @@
     background: var(--bg);
     color: var(--text);
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    padding: 32px 20px 80px;
+    padding: 32px 20px 100px;
   }
-  .wrap { max-width: 880px; margin: 0 auto; }
+  .wrap { max-width: 1000px; margin: 0 auto; }
   h1 { font-size: 1.5rem; margin: 0 0 6px; }
+  h3 { margin: 0; }
   .subtitle { color: var(--text-dim); margin: 0 0 28px; font-size: 0.95rem; }
   .warning {
     background: #3a2a12;
@@ -54,9 +56,11 @@
     color: var(--text-dim);
     margin: 0 0 14px;
   }
+  .panel-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+  .panel-head h2 { margin: 0; }
 
   label { display: block; font-size: 0.85rem; margin-bottom: 6px; color: var(--text-dim); }
-  input[type="password"], input[type="text"] {
+  input[type="password"], input[type="text"], textarea {
     width: 100%;
     background: var(--panel-2);
     border: 1px solid var(--border);
@@ -64,8 +68,10 @@
     padding: 10px 12px;
     border-radius: 8px;
     font-size: 0.95rem;
+    font-family: inherit;
   }
-  input[type="password"]:focus, input[type="text"]:focus { outline: 2px solid var(--accent); }
+  textarea { resize: vertical; min-height: 64px; }
+  input:focus, textarea:focus { outline: 2px solid var(--accent); }
 
   .row { display: flex; align-items: center; gap: 8px; margin-top: 10px; font-size: 0.85rem; color: var(--text-dim); }
   .row input[type="checkbox"] { width: auto; }
@@ -78,17 +84,17 @@
 
   .slots { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 16px; }
 
-  .slot {
-    background: var(--panel);
+  .slot, .dish-card {
+    background: var(--panel-2);
     border: 1px solid var(--border);
     border-radius: 14px;
     overflow: hidden;
     display: flex;
     flex-direction: column;
   }
-  .slot-thumb {
+  .slot-thumb, .dish-thumb {
     aspect-ratio: 4 / 3;
-    background: var(--panel-2) center/cover no-repeat;
+    background: var(--panel) center/cover no-repeat;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -96,7 +102,7 @@
     font-size: 0.8rem;
     position: relative;
   }
-  .slot-thumb.has-image { color: transparent; }
+  .slot-thumb.has-image, .dish-thumb.has-image { color: transparent; }
   .slot-body { padding: 14px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
   .slot-name { font-weight: 600; font-size: 0.95rem; }
   .slot-path { font-size: 0.78rem; color: var(--text-dim); font-family: ui-monospace, monospace; }
@@ -121,6 +127,49 @@
 
   .top-links { margin-bottom: 24px; font-size: 0.85rem; }
   .top-links a { color: var(--text-dim); margin-right: 16px; }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--panel-2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 8px 14px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .btn:hover { border-color: var(--text-dim); }
+  .btn.primary { background: var(--accent); border-color: var(--accent); font-weight: 600; }
+  .btn.primary:hover { background: #cf2f23; }
+  .btn.ghost { background: transparent; }
+  .btn.danger { color: var(--err); }
+  .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  .dishes { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; margin-bottom: 18px; }
+
+  .dish-body { padding: 14px; display: flex; flex-direction: column; gap: 10px; }
+  .dish-field label { margin-bottom: 4px; }
+  .dish-row { display: flex; gap: 10px; }
+  .dish-row > div { flex: 1; }
+  .dish-actions { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 4px; }
+  .dish-order { display: flex; gap: 4px; }
+  .dish-order .btn { padding: 6px 8px; }
+
+  .save-bar {
+    position: sticky;
+    bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 18px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+  }
 </style>
 </head>
 <body>
@@ -130,8 +179,8 @@
     <a href="https://github.com/lolosannn/SmashBurger" target="_blank" rel="noopener">Repo en GitHub ↗</a>
   </div>
 
-  <h1>Panel de fotos — Smash Burger</h1>
-  <p class="subtitle">Subí cada foto directo al repo, sin pasar por GitHub. Se guarda con el nombre correcto automáticamente.</p>
+  <h1>Panel de administración — Smash Burger</h1>
+  <p class="subtitle">Editá el menú (agregar, sacar, modificar platos y fotos) directo sobre el repo, sin pasar por GitHub.</p>
 
   <div class="warning">
     <strong>Uso interno.</strong> No compartas esta página ni el link con nadie. Usá un token
@@ -168,37 +217,40 @@
   </div>
 
   <div class="panel">
-    <h2>Fotos</h2>
-    <div class="slots" id="slots"></div>
+    <h2>Foto de portada (hero)</h2>
+    <div class="slots" id="heroSlot"></div>
   </div>
+
+  <div class="panel">
+    <div class="panel-head">
+      <h2>Platos del menú</h2>
+      <button class="btn" id="addDish" type="button">+ Agregar plato</button>
+    </div>
+    <div class="dishes" id="dishes">
+      <p class="status busy">Cargando menú…</p>
+    </div>
+  </div>
+</div>
+
+<div class="save-bar" id="saveBar" style="display:none;">
+  <button class="btn primary" id="saveMenu" type="button">Guardar cambios en el menú</button>
+  <span class="status" id="saveStatus"></span>
 </div>
 
 <script>
 (function () {
   "use strict";
 
-  var SLOTS = [
-    { key: "hero-tokyo.png", label: "Portada (hero) — Tokyo" },
-    { key: "tokyo.jpg", label: "Menú — Tokyo" },
-    { key: "denver.jpg", label: "Menú — Denver" },
-    { key: "sinaloa.jpg", label: "Menú — Sinaloa" },
-    { key: "kiev.jpg", label: "Menú — Kiev" },
-    { key: "miami.jpg", label: "Menú — Miami" }
-  ];
-
   var tokenInput = document.getElementById("token");
   var rememberBox = document.getElementById("remember");
-  var slotsEl = document.getElementById("slots");
 
   var saved = localStorage.getItem("sb_admin_token");
   if (saved) {
     tokenInput.value = saved;
     rememberBox.checked = true;
   }
-
   rememberBox.addEventListener("change", syncRemember);
   tokenInput.addEventListener("input", syncRemember);
-
   function syncRemember() {
     if (rememberBox.checked && tokenInput.value) {
       localStorage.setItem("sb_admin_token", tokenInput.value);
@@ -219,11 +271,14 @@
   function apiUrl(c, path) {
     return "https://api.github.com/repos/" + c.owner + "/" + c.repo + "/contents/" + path;
   }
-
   function rawUrl(c, path) {
     return "https://raw.githubusercontent.com/" + c.owner + "/" + c.repo + "/" + c.branch + "/" + path + "?t=" + Date.now();
   }
-
+  function authHeaders(c) {
+    var h = { Accept: "application/vnd.github+json" };
+    if (c.token) h.Authorization = "token " + c.token;
+    return h;
+  }
   function fileToBase64(file) {
     return new Promise(function (resolve, reject) {
       var reader = new FileReader();
@@ -232,63 +287,84 @@
       reader.readAsDataURL(file);
     });
   }
-
-  function authHeaders(c) {
-    return { Authorization: "token " + c.token, Accept: "application/vnd.github+json" };
+  function b64EncodeUnicode(str) {
+    return btoa(unescape(encodeURIComponent(str)));
+  }
+  function b64DecodeUnicode(str) {
+    return decodeURIComponent(escape(atob(str)));
   }
 
-  function getExistingSha(c, path) {
+  function getFile(c, path) {
     return fetch(apiUrl(c, path) + "?ref=" + encodeURIComponent(c.branch), { headers: authHeaders(c) })
       .then(function (res) {
-        if (res.status === 200) return res.json().then(function (j) { return j.sha; });
+        if (res.status === 200) return res.json();
         return null;
       })
       .catch(function () { return null; });
   }
 
-  function uploadFile(c, path, file) {
-    return Promise.all([fileToBase64(file), getExistingSha(c, path)]).then(function (r) {
-      var base64 = r[0], sha = r[1];
-      var body = {
-        message: "Update " + path + " via admin panel",
-        content: base64,
-        branch: c.branch
-      };
-      if (sha) body.sha = sha;
-      return fetch(apiUrl(c, path), {
-        method: "PUT",
-        headers: Object.assign({ "Content-Type": "application/json" }, authHeaders(c)),
-        body: JSON.stringify(body)
-      }).then(function (res) {
-        if (!res.ok) {
-          return res.json().then(function (err) {
-            throw new Error(err.message || res.statusText);
-          });
-        }
-        return res.json();
-      });
+  function putFile(c, path, base64Content, sha, message) {
+    var body = { message: message, content: base64Content, branch: c.branch };
+    if (sha) body.sha = sha;
+    return fetch(apiUrl(c, path), {
+      method: "PUT",
+      headers: Object.assign({ "Content-Type": "application/json" }, authHeaders(c)),
+      body: JSON.stringify(body)
+    }).then(function (res) {
+      if (!res.ok) {
+        return res.json().then(function (err) { throw new Error(err.message || res.statusText); });
+      }
+      return res.json();
     });
   }
 
-  function buildSlot(slot) {
+  function uploadImage(c, path, file) {
+    return Promise.all([fileToBase64(file), getFile(c, path)]).then(function (r) {
+      return putFile(c, path, r[0], r[1] ? r[1].sha : null, "Update " + path + " via admin panel");
+    });
+  }
+
+  function requireToken(status) {
+    var c = cfg();
+    if (!c.token) {
+      status.textContent = "Falta el token de GitHub (arriba).";
+      status.className = "status err";
+      return null;
+    }
+    return c;
+  }
+
+  function slugify(str) {
+    var map = { á: "a", é: "e", í: "i", ó: "o", ú: "u", ñ: "n", ü: "u" };
+    var out = String(str || "").toLowerCase().replace(/[áéíóúñü]/g, function (ch) { return map[ch] || ch; });
+    out = out.replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+    return out || "plato";
+  }
+
+  function extFromFile(file) {
+    var m = /\.([a-zA-Z0-9]+)$/.exec(file.name || "");
+    if (m) return m[1].toLowerCase();
+    if (file.type === "image/png") return "png";
+    if (file.type === "image/webp") return "webp";
+    return "jpg";
+  }
+
+  /* ---------- Hero photo slot ---------- */
+  (function heroSlot() {
+    var container = document.getElementById("heroSlot");
     var el = document.createElement("div");
     el.className = "slot";
-
     var thumb = document.createElement("div");
     thumb.className = "slot-thumb";
     thumb.textContent = "Sin foto todavía";
-
     var body = document.createElement("div");
     body.className = "slot-body";
-
     var name = document.createElement("div");
     name.className = "slot-name";
-    name.textContent = slot.label;
-
+    name.textContent = "Portada (hero) — Tokyo";
     var pathEl = document.createElement("div");
     pathEl.className = "slot-path";
-    pathEl.textContent = "images/" + slot.key;
-
+    pathEl.textContent = "images/hero-tokyo.png";
     var drop = document.createElement("label");
     drop.className = "dropzone";
     drop.textContent = "Click o arrastrá una imagen acá";
@@ -296,7 +372,6 @@
     input.type = "file";
     input.accept = "image/*";
     drop.appendChild(input);
-
     var status = document.createElement("div");
     status.className = "status";
 
@@ -306,32 +381,23 @@
     body.appendChild(status);
     el.appendChild(thumb);
     el.appendChild(body);
-    slotsEl.appendChild(el);
+    container.appendChild(el);
 
     function setThumb(url) {
       thumb.style.backgroundImage = "url('" + url + "')";
       thumb.classList.add("has-image");
       thumb.textContent = "";
     }
-
     function handleFile(file) {
       if (!file) return;
-      var c = cfg();
-      if (!c.token) {
-        status.textContent = "Falta el token de GitHub (arriba).";
-        status.className = "status err";
-        return;
-      }
-
-      var localPreview = URL.createObjectURL(file);
-      setThumb(localPreview);
-
+      var c = requireToken(status);
+      if (!c) return;
+      setThumb(URL.createObjectURL(file));
       status.textContent = "Subiendo…";
       status.className = "status busy";
-
-      uploadFile(c, "images/" + slot.key, file)
+      uploadImage(c, "images/hero-tokyo.png", file)
         .then(function () {
-          status.textContent = "Listo ✓ subida a " + c.branch;
+          status.textContent = "Listo ✓";
           status.className = "status ok";
         })
         .catch(function (err) {
@@ -339,16 +405,9 @@
           status.className = "status err";
         });
     }
-
-    input.addEventListener("change", function () {
-      handleFile(input.files[0]);
-    });
-
+    input.addEventListener("change", function () { handleFile(input.files[0]); });
     ["dragover", "dragenter"].forEach(function (evt) {
-      drop.addEventListener(evt, function (e) {
-        e.preventDefault();
-        drop.classList.add("drag");
-      });
+      drop.addEventListener(evt, function (e) { e.preventDefault(); drop.classList.add("drag"); });
     });
     ["dragleave", "dragend", "drop"].forEach(function (evt) {
       drop.addEventListener(evt, function () { drop.classList.remove("drag"); });
@@ -358,15 +417,262 @@
       var file = e.dataTransfer.files && e.dataTransfer.files[0];
       if (file) handleFile(file);
     });
-
-    // Try to load an existing preview from the branch (works even without a token, public repo).
     var probe = new Image();
     probe.onload = function () { setThumb(probe.src); };
-    probe.onerror = function () { /* no existing file yet, keep placeholder */ };
-    probe.src = rawUrl(cfg(), "images/" + slot.key);
+    probe.src = rawUrl(cfg(), "images/hero-tokyo.png");
+  })();
+
+  /* ---------- Menu editor ---------- */
+  var dishesEl = document.getElementById("dishes");
+  var addDishBtn = document.getElementById("addDish");
+  var saveBar = document.getElementById("saveBar");
+  var saveBtn = document.getElementById("saveMenu");
+  var saveStatus = document.getElementById("saveStatus");
+
+  var state = { items: [], sha: null, loaded: false };
+
+  function loadMenu() {
+    var c = cfg();
+    getFile(c, "menu.json").then(function (file) {
+      state.loaded = true;
+      if (file && file.content) {
+        try {
+          state.items = JSON.parse(b64DecodeUnicode(file.content.replace(/\n/g, "")));
+          state.sha = file.sha;
+        } catch (e) {
+          state.items = [];
+          state.sha = file.sha;
+        }
+      } else {
+        state.items = [];
+        state.sha = null;
+      }
+      renderDishes();
+      saveBar.style.display = "flex";
+    });
   }
 
-  SLOTS.forEach(buildSlot);
+  function renderDishes() {
+    dishesEl.innerHTML = "";
+    if (!state.items.length) {
+      var empty = document.createElement("p");
+      empty.className = "status";
+      empty.textContent = "No hay platos todavía. Agregá uno con el botón de arriba.";
+      dishesEl.appendChild(empty);
+      return;
+    }
+    state.items.forEach(function (item, index) {
+      dishesEl.appendChild(buildDishCard(item, index));
+    });
+  }
+
+  function buildDishCard(item, index) {
+    var c0 = cfg();
+    var card = document.createElement("div");
+    card.className = "dish-card";
+
+    var thumb = document.createElement("div");
+    thumb.className = "dish-thumb";
+    thumb.textContent = "Sin foto";
+
+    var body = document.createElement("div");
+    body.className = "dish-body";
+
+    function field(labelText, tag, value, placeholder) {
+      var wrap = document.createElement("div");
+      wrap.className = "dish-field";
+      var l = document.createElement("label");
+      l.textContent = labelText;
+      var input = document.createElement(tag);
+      input.value = value || "";
+      if (placeholder) input.placeholder = placeholder;
+      wrap.appendChild(l);
+      wrap.appendChild(input);
+      body.appendChild(wrap);
+      return input;
+    }
+
+    var nameInput = field("Nombre", "input", item.name, "Ej: Tokyo");
+    nameInput.type = "text";
+    var descInput = field("Descripción", "textarea", item.description, "Ingredientes del plato");
+    var row = document.createElement("div");
+    row.className = "dish-row";
+    body.appendChild(row);
+
+    var priceWrap = document.createElement("div");
+    var priceLabel = document.createElement("label");
+    priceLabel.textContent = "Precio";
+    var priceInput = document.createElement("input");
+    priceInput.type = "text";
+    priceInput.value = item.price || "";
+    priceInput.placeholder = "$0.000";
+    priceWrap.appendChild(priceLabel);
+    priceWrap.appendChild(priceInput);
+    row.appendChild(priceWrap);
+
+    var tagWrap = document.createElement("div");
+    var tagLabel = document.createElement("label");
+    tagLabel.textContent = "Etiqueta";
+    var tagInput = document.createElement("input");
+    tagInput.type = "text";
+    tagInput.value = item.tag || "";
+    tagInput.placeholder = "Ej: Doble";
+    tagWrap.appendChild(tagLabel);
+    tagWrap.appendChild(tagInput);
+    row.appendChild(tagWrap);
+
+    var drop = document.createElement("label");
+    drop.className = "dropzone";
+    drop.textContent = "Click o arrastrá una foto";
+    var fileInput = document.createElement("input");
+    fileInput.type = "file";
+    fileInput.accept = "image/*";
+    drop.appendChild(fileInput);
+    body.appendChild(drop);
+
+    var photoStatus = document.createElement("div");
+    photoStatus.className = "status";
+    body.appendChild(photoStatus);
+
+    var actions = document.createElement("div");
+    actions.className = "dish-actions";
+    var order = document.createElement("div");
+    order.className = "dish-order";
+    var upBtn = document.createElement("button");
+    upBtn.className = "btn ghost";
+    upBtn.type = "button";
+    upBtn.textContent = "↑";
+    upBtn.disabled = index === 0;
+    var downBtn = document.createElement("button");
+    downBtn.className = "btn ghost";
+    downBtn.type = "button";
+    downBtn.textContent = "↓";
+    downBtn.disabled = index === state.items.length - 1;
+    order.appendChild(upBtn);
+    order.appendChild(downBtn);
+    var delBtn = document.createElement("button");
+    delBtn.className = "btn danger";
+    delBtn.type = "button";
+    delBtn.textContent = "Eliminar";
+    actions.appendChild(order);
+    actions.appendChild(delBtn);
+    body.appendChild(actions);
+
+    card.appendChild(thumb);
+    card.appendChild(body);
+
+    function setThumb(url) {
+      thumb.style.backgroundImage = "url('" + url + "')";
+      thumb.classList.add("has-image");
+      thumb.textContent = "";
+    }
+    if (item.image) {
+      var probe = new Image();
+      probe.onload = function () { setThumb(probe.src); };
+      probe.src = rawUrl(c0, item.image) ;
+    }
+
+    nameInput.addEventListener("input", function () { item.name = nameInput.value; });
+    descInput.addEventListener("input", function () { item.description = descInput.value; });
+    priceInput.addEventListener("input", function () { item.price = priceInput.value; });
+    tagInput.addEventListener("input", function () { item.tag = tagInput.value; });
+
+    function handlePhoto(file) {
+      if (!file) return;
+      var c = requireToken(photoStatus);
+      if (!c) return;
+      if (!item.id) {
+        if (!nameInput.value.trim()) {
+          photoStatus.textContent = "Escribí el nombre del plato antes de subir la foto.";
+          photoStatus.className = "status err";
+          return;
+        }
+        item.id = slugify(nameInput.value);
+      }
+      var ext = extFromFile(file);
+      var path = "images/" + item.id + "." + ext;
+      setThumb(URL.createObjectURL(file));
+      photoStatus.textContent = "Subiendo…";
+      photoStatus.className = "status busy";
+      uploadImage(c, path, file)
+        .then(function () {
+          item.image = path;
+          photoStatus.textContent = "Listo ✓";
+          photoStatus.className = "status ok";
+        })
+        .catch(function (err) {
+          photoStatus.textContent = "Error: " + err.message;
+          photoStatus.className = "status err";
+        });
+    }
+    fileInput.addEventListener("change", function () { handlePhoto(fileInput.files[0]); });
+    ["dragover", "dragenter"].forEach(function (evt) {
+      drop.addEventListener(evt, function (e) { e.preventDefault(); drop.classList.add("drag"); });
+    });
+    ["dragleave", "dragend", "drop"].forEach(function (evt) {
+      drop.addEventListener(evt, function () { drop.classList.remove("drag"); });
+    });
+    drop.addEventListener("drop", function (e) {
+      e.preventDefault();
+      var file = e.dataTransfer.files && e.dataTransfer.files[0];
+      if (file) handlePhoto(file);
+    });
+
+    upBtn.addEventListener("click", function () {
+      if (index === 0) return;
+      var tmp = state.items[index - 1];
+      state.items[index - 1] = state.items[index];
+      state.items[index] = tmp;
+      renderDishes();
+    });
+    downBtn.addEventListener("click", function () {
+      if (index === state.items.length - 1) return;
+      var tmp = state.items[index + 1];
+      state.items[index + 1] = state.items[index];
+      state.items[index] = tmp;
+      renderDishes();
+    });
+    delBtn.addEventListener("click", function () {
+      if (!confirm('¿Sacar "' + (item.name || "este plato") + '" del menú?')) return;
+      state.items.splice(index, 1);
+      renderDishes();
+    });
+
+    return card;
+  }
+
+  addDishBtn.addEventListener("click", function () {
+    state.items.push({ id: "", name: "", description: "", price: "", tag: "", image: "" });
+    renderDishes();
+  });
+
+  saveBtn.addEventListener("click", function () {
+    var c = requireToken(saveStatus);
+    if (!c) return;
+    var missing = state.items.some(function (it) { return !it.id || !it.image; });
+    if (missing && !confirm("Hay platos sin foto todavía. ¿Guardar igual?")) return;
+
+    saveStatus.textContent = "Guardando…";
+    saveStatus.className = "status busy";
+    saveBtn.disabled = true;
+
+    var json = JSON.stringify(state.items, null, 2) + "\n";
+    var base64 = b64EncodeUnicode(json);
+
+    putFile(c, "menu.json", base64, state.sha, "Update menu.json via admin panel")
+      .then(function (res) {
+        state.sha = res.content.sha;
+        saveStatus.textContent = "Guardado ✓ — el sitio se actualiza en 1-2 min.";
+        saveStatus.className = "status ok";
+      })
+      .catch(function (err) {
+        saveStatus.textContent = "Error: " + err.message;
+        saveStatus.className = "status err";
+      })
+      .then(function () { saveBtn.disabled = false; });
+  });
+
+  loadMenu();
 })();
 </script>
 </body>
