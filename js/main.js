@@ -1,6 +1,10 @@
 (function () {
   "use strict";
 
+  if ("scrollRestoration" in history) {
+    history.scrollRestoration = "manual";
+  }
+
   document.getElementById("year").textContent = new Date().getFullYear();
 
   /* ---------- Preloader: burger build + layered wipe reveal ---------- */
@@ -97,8 +101,30 @@
     }
   });
 
+  /* ---------- Scroll reveal ---------- */
+  var revealIO = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
+      if (entry.isIntersecting) {
+        entry.target.classList.add("is-visible");
+        revealIO.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15, rootMargin: "0px 0px -60px 0px" });
+
+  function observeReveals(root) {
+    (root || document).querySelectorAll(".reveal").forEach(function (el) {
+      if (el.dataset.revealObserved) return;
+      el.dataset.revealObserved = "1";
+      revealIO.observe(el);
+    });
+  }
+
+  observeReveals(document);
+
   /* ---------- Menu: rendered from menu.json ---------- */
   var menuGrid = document.getElementById("menuGrid");
+  var fullMenuGrid = document.getElementById("fullMenuGrid");
+  var menuItems = [];
 
   function escapeHtml(str) {
     var div = document.createElement("div");
@@ -106,14 +132,15 @@
     return div.innerHTML;
   }
 
-  function renderMenu(items) {
+  function renderMenu(container, items, stagger) {
     if (!items.length) {
-      menuGrid.innerHTML = '<p class="menu-loading">Todavía no hay platos cargados.</p>';
+      container.innerHTML = '<p class="menu-loading">Todavía no hay platos cargados.</p>';
       return;
     }
-    menuGrid.innerHTML = items.map(function (item) {
+    container.innerHTML = items.map(function (item, i) {
+      var delay = stagger ? ' style="transition-delay:' + (i * 0.07) + 's"' : "";
       return (
-        '<article class="menu-card">' +
+        '<article class="menu-card reveal reveal--up"' + delay + '>' +
           '<div class="menu-card__photo">' +
             '<img src="' + escapeHtml(item.image) + '" alt="Burger ' + escapeHtml(item.name) + '" loading="lazy" />' +
             '<span class="price-tag">' + escapeHtml(item.price) + '</span>' +
@@ -126,12 +153,81 @@
         '</article>'
       );
     }).join("");
+    observeReveals(container);
   }
 
   fetch("menu.json", { cache: "no-store" })
     .then(function (res) { return res.json(); })
-    .then(renderMenu)
+    .then(function (items) {
+      menuItems = items;
+      renderMenu(menuGrid, items, true);
+      if (fullMenu && fullMenu.classList.contains("is-open")) {
+        renderMenu(fullMenuGrid, items, true);
+        fullMenuGrid.dataset.rendered = String(items.length);
+      }
+    })
     .catch(function () {
       menuGrid.innerHTML = '<p class="menu-loading">No pudimos cargar el menú. Volvé a intentar más tarde.</p>';
     });
+
+  /* ---------- Carta completa: vista a pantalla completa ---------- */
+  var fullMenu = document.getElementById("fullMenu");
+  var openFullMenuBtn = document.getElementById("openFullMenu");
+  var fullMenuBackBtn = document.getElementById("fullMenuBack");
+
+  var fullMenuHistoryPushed = false;
+
+  function openFullMenu(e) {
+    if (e) e.preventDefault();
+    if (fullMenuGrid && (!fullMenuGrid.dataset.rendered || fullMenuGrid.dataset.rendered !== String(menuItems.length))) {
+      renderMenu(fullMenuGrid, menuItems, true);
+      fullMenuGrid.dataset.rendered = String(menuItems.length);
+    }
+    fullMenu.classList.add("is-open");
+    fullMenu.setAttribute("aria-hidden", "false");
+    body.classList.add("no-scroll");
+    fullMenu.scrollTop = 0;
+    if (location.hash !== "#carta") {
+      history.pushState({ fullMenu: true }, "", "#carta");
+      fullMenuHistoryPushed = true;
+    }
+  }
+
+  function closeFullMenu(scrollToMenu) {
+    if (!fullMenu.classList.contains("is-open")) return;
+    fullMenu.classList.remove("is-open");
+    fullMenu.setAttribute("aria-hidden", "true");
+    body.classList.remove("no-scroll");
+    if (location.hash === "#carta") {
+      if (fullMenuHistoryPushed) {
+        history.back();
+      } else {
+        history.replaceState(null, "", location.pathname + location.search);
+      }
+    }
+    fullMenuHistoryPushed = false;
+    if (scrollToMenu) {
+      var target = document.getElementById("menu");
+      if (target) target.scrollIntoView({ behavior: "smooth" });
+    }
+  }
+
+  if (openFullMenuBtn) openFullMenuBtn.addEventListener("click", openFullMenu);
+
+  if (fullMenuBackBtn) {
+    fullMenuBackBtn.addEventListener("click", function (e) {
+      e.preventDefault();
+      closeFullMenu(true);
+    });
+  }
+
+  window.addEventListener("popstate", function () {
+    if (location.hash !== "#carta") closeFullMenu(false);
+  });
+
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape") closeFullMenu(false);
+  });
+
+  if (location.hash === "#carta") openFullMenu();
 })();

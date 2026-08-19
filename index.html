@@ -82,24 +82,24 @@
 
     <div class="container">
       <div class="hero-copy">
-        <span class="eyebrow">100% carne vacuna · pan brioche</span>
-        <h1>
+        <span class="eyebrow reveal reveal--left">100% carne vacuna · pan brioche</span>
+        <h1 class="reveal reveal--left" style="transition-delay:.08s">
           Smasheadas a mano,<br />
           directo a la <span class="highlight text-outline">plancha
             <svg viewBox="0 0 200 20" preserveAspectRatio="none" aria-hidden="true"><path d="M2 14C40 4 160 4 198 14" fill="none" stroke="var(--yellow)" stroke-width="8" stroke-linecap="round"/></svg>
           </span>
         </h1>
-        <p>
+        <p class="reveal reveal--left" style="transition-delay:.16s">
           Carne aplastada en el punto justo para maximizar el dorado y el sabor,
           pan brioche tostado en manteca y el doble de queso. Nada de vueltas,
           todo sabor.
         </p>
-        <div class="hero-actions">
+        <div class="hero-actions reveal reveal--left" style="transition-delay:.24s">
           <a href="#menu" class="btn btn--primary">Ver menú</a>
           <a href="#ubicacion" class="btn btn--ghost">Cómo llegar</a>
         </div>
 
-        <div class="hero-stats">
+        <div class="hero-stats reveal reveal--left" style="transition-delay:.32s">
           <div>
             <strong>+8</strong>
             <span>años en la plancha</span>
@@ -115,8 +115,13 @@
         </div>
       </div>
 
-      <div class="hero-visual">
+      <div class="hero-visual reveal reveal--scale" style="transition-delay:.15s">
+        <div class="hero-visual__glow" aria-hidden="true"></div>
+        <div class="hero-visual__ring" aria-hidden="true"></div>
+        <div class="hero-visual__ring hero-visual__ring--2" aria-hidden="true"></div>
         <img class="hero-cutout" src="images/hero-tokyo.png" alt="Burger Tokyo, la clásica de Smash Burger" />
+        <span class="hero-badge hero-badge--rating">4.8★<small>+2.000 pedidos</small></span>
+        <span class="hero-badge hero-badge--fresh">🔥 Recién<br />smasheada</span>
       </div>
     </div>
   </section>
@@ -124,19 +129,19 @@
   <!-- ============ FEATURE STRIP ============ -->
   <section class="feature-strip">
     <div class="container">
-      <div class="feature">
+      <div class="feature reveal reveal--up">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v6M12 16v6M4.9 4.9l4.2 4.2M14.9 14.9l4.2 4.2M2 12h6M16 12h6M4.9 19.1l4.2-4.2M14.9 9.1l4.2-4.2"/></svg>
         <div><strong>Plancha al máximo</strong><span>Sellado y dorado real</span></div>
       </div>
-      <div class="feature">
+      <div class="feature reveal reveal--up">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 10h18M5 6h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2Z"/></svg>
         <div><strong>Pan brioche</strong><span>Horneado y tostado en manteca</span></div>
       </div>
-      <div class="feature">
+      <div class="feature reveal reveal--up">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2 2 7l10 5 10-5-10-5ZM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
         <div><strong>Carne premium</strong><span>100% vacuna, sin mezclas</span></div>
       </div>
-      <div class="feature">
+      <div class="feature reveal reveal--up">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 17h13V7H3v10ZM16 10h3l3 3v4h-6v-7ZM6 20a2 2 0 1 0 0-4 2 2 0 0 0 0 4ZM17 20a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z"/></svg>
         <div><strong>Delivery rápido</strong><span>Directo a tu puerta</span></div>
       </div>
@@ -146,7 +151,7 @@
   <!-- ============ MENU ============ -->
   <section class="section" id="menu">
     <div class="container">
-      <div class="section-head">
+      <div class="section-head reveal reveal--up">
         <span class="eyebrow">Nuestra carta</span>
         <h2>Elegí tu <span class="highlight">smash
             <svg viewBox="0 0 200 20" preserveAspectRatio="none" aria-hidden="true"><path d="M2 14C40 4 160 4 198 14" fill="none" stroke="var(--red)" stroke-width="8" stroke-linecap="round"/></svg>
@@ -158,8 +163,8 @@
         <p class="menu-loading">Cargando el menú…</p>
       </div>
 
-      <div class="menu-cta">
-        <a href="#menu" class="btn btn--secondary">Ver carta completa</a>
+      <div class="menu-cta reveal reveal--up">
+        <a href="#carta" class="btn btn--secondary" id="openFullMenu">Ver carta completa</a>
       </div>
     </div>
   </section>
@@ -167,33 +172,25 @@
   <!-- ============ ABOUT ============ -->
   <section class="section about" id="nosotros">
     <div class="container">
-      <div class="about-visual">
-        <div class="css-burger" aria-hidden="true">
-          <div class="smoke s2"></div>
-          <div class="smoke"></div>
-          <div class="bun-top"></div>
-          <div class="lettuce"></div>
-          <div class="cheese"></div>
-          <div class="patty"></div>
-          <div class="tomato"></div>
-          <div class="bun-bottom"></div>
-        </div>
+      <div class="about-visual reveal reveal--left">
+        <img class="about-photo" src="images/denver.jpg" alt="Medallones smasheados dorándose en la plancha" loading="lazy" />
+        <span class="about-badge">+8 años<br />en la plancha</span>
       </div>
 
       <div class="about-copy">
-        <span class="eyebrow">Nuestra historia</span>
-        <h2>De un carrito en la esquina a tu antojo de todos los días</h2>
-        <p>
+        <span class="eyebrow reveal reveal--right">Nuestra historia</span>
+        <h2 class="reveal reveal--right" style="transition-delay:.08s">De un carrito en la esquina a tu antojo de todos los días</h2>
+        <p class="reveal reveal--right" style="transition-delay:.14s">
           Empezamos con una plancha, una receta y la idea de que una hamburguesa
           smasheada bien hecha no necesita nada más. Hoy seguimos cocinando cada
           medallón al momento, sin atajos ni ingredientes de más.
         </p>
-        <p>
+        <p class="reveal reveal--right" style="transition-delay:.2s">
           Elegimos cortes premium, horneamos nuestro propio pan brioche y cortamos
           las papas a mano todos los días. Así de simple, así de rico.
         </p>
 
-        <ul class="about-list">
+        <ul class="about-list reveal reveal--right" style="transition-delay:.26s">
           <li>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m5 13 4 4L19 7"/></svg>
             Carne 100% vacuna, sin conservantes
@@ -214,7 +211,7 @@
   <!-- ============ UBICACION ============ -->
   <section class="section location" id="ubicacion">
     <div class="container">
-      <div class="location-card">
+      <div class="location-card reveal reveal--left">
         <span class="eyebrow">Visitanos</span>
         <h3>Ubicación y horarios</h3>
 
@@ -249,7 +246,7 @@
         </table>
       </div>
 
-      <div class="map-frame">
+      <div class="map-frame reveal reveal--right">
         <div class="map-pin">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s7-6.5 7-12a7 7 0 1 0-14 0c0 5.5 7 12 7 12Z"/><circle cx="12" cy="9" r="2.5"/></svg>
           <span>Estamos acá</span>
@@ -261,15 +258,45 @@
   <!-- ============ CTA BANNER ============ -->
   <section class="cta-banner" id="contacto">
     <div class="container">
-      <div>
+      <div class="reveal reveal--up">
         <h2>¿Tenés hambre?</h2>
         <p>Pedí por WhatsApp o delivery y te la llevamos recién smasheada.</p>
       </div>
-      <a href="https://wa.me/5491123456789" target="_blank" rel="noopener" class="btn btn--secondary">Pedir por WhatsApp</a>
+      <a href="https://wa.me/5491123456789" target="_blank" rel="noopener" class="btn btn--secondary reveal reveal--up" style="transition-delay:.1s">Pedir por WhatsApp</a>
     </div>
   </section>
 
 </main>
+
+<!-- ============ CARTA COMPLETA (vista a pantalla completa) ============ -->
+<section class="full-menu" id="fullMenu" aria-hidden="true">
+  <div class="full-menu__top">
+    <div class="container full-menu__top-inner">
+      <span class="logo">
+        <span class="logo-smash">SMASH</span>
+        <span class="logo-burger">BURGER</span>
+      </span>
+      <button class="btn btn--ghost btn--sm full-menu__back" id="fullMenuBack" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        Volver al inicio
+      </button>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">Carta completa</span>
+      <h2>Todo nuestro <span class="highlight">menú
+          <svg viewBox="0 0 200 20" preserveAspectRatio="none" aria-hidden="true"><path d="M2 14C40 4 160 4 198 14" fill="none" stroke="var(--red)" stroke-width="8" stroke-linecap="round"/></svg>
+        </span></h2>
+      <p>Elegí tu smash favorita, todas hechas al momento en la plancha.</p>
+    </div>
+
+    <div class="menu-grid" id="fullMenuGrid">
+      <p class="menu-loading">Cargando el menú…</p>
+    </div>
+  </div>
+</section>
 
 <!-- ============ FOOTER ============ -->
 <footer class="site-footer">
