@@ -57,6 +57,7 @@
       revealOrange.remove();
       revealMaroon.remove();
       body.classList.remove("no-scroll");
+      observeReveals(document);
     }, 1950);
   }
 
@@ -101,13 +102,10 @@
     }
   });
 
-  /* ---------- Scroll reveal ---------- */
+  /* ---------- Scroll reveal (replays every time an element enters view) ---------- */
   var revealIO = new IntersectionObserver(function (entries) {
     entries.forEach(function (entry) {
-      if (entry.isIntersecting) {
-        entry.target.classList.add("is-visible");
-        revealIO.unobserve(entry.target);
-      }
+      entry.target.classList.toggle("is-visible", entry.isIntersecting);
     });
   }, { threshold: 0.15, rootMargin: "0px 0px -60px 0px" });
 
@@ -119,7 +117,8 @@
     });
   }
 
-  observeReveals(document);
+  // Hero content is observed once the preloader finishes, so the reveal
+  // animation actually plays instead of firing unseen behind the curtain.
 
   /* ---------- Menu: rendered from menu.json ---------- */
   var menuGrid = document.getElementById("menuGrid");
