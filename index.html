@@ -174,7 +174,16 @@
   <section class="section about" id="nosotros">
     <div class="container">
       <div class="about-visual reveal reveal--left">
-        <img class="about-photo" src="images/denver.jpg" alt="Medallones smasheados dorándose en la plancha" loading="lazy" />
+        <div class="about-carousel" id="aboutCarousel">
+          <div class="about-carousel__track" id="aboutCarouselTrack"></div>
+          <button type="button" class="about-carousel__nav about-carousel__nav--prev" id="aboutPrev" aria-label="Foto anterior">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+          </button>
+          <button type="button" class="about-carousel__nav about-carousel__nav--next" id="aboutNext" aria-label="Foto siguiente">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+          </button>
+          <div class="about-carousel__dots" id="aboutDots"></div>
+        </div>
         <span class="about-badge">+8 años<br />en la plancha</span>
       </div>
 
@@ -416,15 +425,6 @@
       </div>
 
       <div class="footer-col">
-        <h4>Menú</h4>
-        <ul>
-          <li><a href="#menu">Clásicas</a></li>
-          <li><a href="#menu">Especiales</a></li>
-          <li><a href="#menu">Veggie</a></li>
-        </ul>
-      </div>
-
-      <div class="footer-col">
         <h4>Contacto</h4>
         <ul>
           <li><a href="tel:+5491123456789">+54 9 11 2345-6789</a></li>
@@ -443,5 +443,6 @@
 
 <script src="js/main.js"></script>
 <script src="js/order.js"></script>
+<script src="js/about-carousel.js"></script>
 </body>
 </html>

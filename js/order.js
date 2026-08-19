@@ -1,7 +1,7 @@
 (function () {
   "use strict";
 
-  var WHATSAPP_NUMBER = "5491123456789"; // same number used across the site
+  var WHATSAPP_NUMBER = "5491160342441";
 
   var FRIES = [
     { id: "papas-chicas", name: "Papas chicas", price: 3500 },

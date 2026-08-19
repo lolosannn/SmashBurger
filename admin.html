@@ -163,7 +163,8 @@
     bottom: 16px;
     display: flex;
     align-items: center;
-    gap: 14px;
+    flex-wrap: wrap;
+    gap: 10px 14px;
     background: var(--panel);
     border: 1px solid var(--border);
     border-radius: 12px;
@@ -223,6 +224,17 @@
 
   <div class="panel">
     <div class="panel-head">
+      <h2>Carrusel — Nuestra historia</h2>
+      <button class="btn" id="addAboutPhoto" type="button">+ Agregar foto</button>
+    </div>
+    <p class="small" style="margin-top:0;margin-bottom:14px;">Estas fotos rotan en la sección "Nuestra historia" del sitio. Subí fotos reales del local o de la plancha.</p>
+    <div class="dishes" id="aboutPhotos">
+      <p class="status busy">Cargando fotos…</p>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-head">
       <h2>Platos del menú</h2>
       <button class="btn" id="addDish" type="button">+ Agregar plato</button>
     </div>
@@ -233,6 +245,8 @@
 </div>
 
 <div class="save-bar" id="saveBar" style="display:none;">
+  <button class="btn primary" id="saveAbout" type="button">Guardar carrusel</button>
+  <span class="status" id="saveAboutStatus"></span>
   <button class="btn primary" id="saveMenu" type="button">Guardar cambios en el menú</button>
   <span class="status" id="saveStatus"></span>
 </div>
@@ -334,6 +348,12 @@
     return c;
   }
 
+  function formatPrice(raw) {
+    var digits = String(raw || "").replace(/[^\d]/g, "").replace(/^0+(?=\d)/, "");
+    if (!digits) return "";
+    return "$" + digits.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+  }
+
   function slugify(str) {
     var map = { á: "a", é: "e", í: "i", ó: "o", ú: "u", ñ: "n", ü: "u" };
     var out = String(str || "").toLowerCase().replace(/[áéíóúñü]/g, function (ch) { return map[ch] || ch; });
@@ -422,6 +442,213 @@
     probe.src = rawUrl(cfg(), "images/hero-tokyo.png");
   })();
 
+  /* ---------- "Nuestra historia" carousel photos ---------- */
+  var aboutPhotosEl = document.getElementById("aboutPhotos");
+  var addAboutBtn = document.getElementById("addAboutPhoto");
+  var saveAboutBtn = document.getElementById("saveAbout");
+  var saveAboutStatus = document.getElementById("saveAboutStatus");
+
+  var aboutState = { items: [], sha: null };
+
+  function loadAbout() {
+    var c = cfg();
+    getFile(c, "about.json").then(function (file) {
+      if (file && file.content) {
+        try {
+          aboutState.items = JSON.parse(b64DecodeUnicode(file.content.replace(/\n/g, "")));
+          aboutState.sha = file.sha;
+        } catch (e) {
+          aboutState.items = [];
+          aboutState.sha = file.sha;
+        }
+      } else {
+        aboutState.items = [];
+        aboutState.sha = null;
+      }
+      renderAboutPhotos();
+      saveBar.style.display = "flex";
+    });
+  }
+
+  function renderAboutPhotos() {
+    aboutPhotosEl.innerHTML = "";
+    if (!aboutState.items.length) {
+      var empty = document.createElement("p");
+      empty.className = "status";
+      empty.textContent = "No hay fotos todavía. Agregá una con el botón de arriba.";
+      aboutPhotosEl.appendChild(empty);
+      return;
+    }
+    aboutState.items.forEach(function (item, index) {
+      aboutPhotosEl.appendChild(buildAboutCard(item, index));
+    });
+  }
+
+  function buildAboutCard(item, index) {
+    var c0 = cfg();
+    var card = document.createElement("div");
+    card.className = "dish-card";
+
+    var thumb = document.createElement("div");
+    thumb.className = "dish-thumb";
+    thumb.textContent = "Sin foto";
+
+    var body = document.createElement("div");
+    body.className = "dish-body";
+
+    var altWrap = document.createElement("div");
+    altWrap.className = "dish-field";
+    var altLabel = document.createElement("label");
+    altLabel.textContent = "Descripción de la foto";
+    var altInput = document.createElement("input");
+    altInput.type = "text";
+    altInput.value = item.alt || "";
+    altInput.placeholder = "Ej: Medallones dorándose en la plancha";
+    altWrap.appendChild(altLabel);
+    altWrap.appendChild(altInput);
+    body.appendChild(altWrap);
+
+    var drop = document.createElement("label");
+    drop.className = "dropzone";
+    drop.textContent = "Click o arrastrá una foto";
+    var fileInput = document.createElement("input");
+    fileInput.type = "file";
+    fileInput.accept = "image/*";
+    drop.appendChild(fileInput);
+    body.appendChild(drop);
+
+    var photoStatus = document.createElement("div");
+    photoStatus.className = "status";
+    body.appendChild(photoStatus);
+
+    var actions = document.createElement("div");
+    actions.className = "dish-actions";
+    var order = document.createElement("div");
+    order.className = "dish-order";
+    var upBtn = document.createElement("button");
+    upBtn.className = "btn ghost";
+    upBtn.type = "button";
+    upBtn.textContent = "↑";
+    upBtn.disabled = index === 0;
+    var downBtn = document.createElement("button");
+    downBtn.className = "btn ghost";
+    downBtn.type = "button";
+    downBtn.textContent = "↓";
+    downBtn.disabled = index === aboutState.items.length - 1;
+    order.appendChild(upBtn);
+    order.appendChild(downBtn);
+    var delBtn = document.createElement("button");
+    delBtn.className = "btn danger";
+    delBtn.type = "button";
+    delBtn.textContent = "Eliminar";
+    actions.appendChild(order);
+    actions.appendChild(delBtn);
+    body.appendChild(actions);
+
+    card.appendChild(thumb);
+    card.appendChild(body);
+
+    function setThumb(url) {
+      thumb.style.backgroundImage = "url('" + url + "')";
+      thumb.classList.add("has-image");
+      thumb.textContent = "";
+    }
+    if (item.image) {
+      var probe = new Image();
+      probe.onload = function () { setThumb(probe.src); };
+      probe.src = rawUrl(c0, item.image);
+    }
+
+    altInput.addEventListener("input", function () { item.alt = altInput.value; });
+
+    function handlePhoto(file) {
+      if (!file) return;
+      var c = requireToken(photoStatus);
+      if (!c) return;
+      if (!item.image) {
+        var ext = extFromFile(file);
+        item.image = "images/about-" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6) + "." + ext;
+      }
+      setThumb(URL.createObjectURL(file));
+      photoStatus.textContent = "Subiendo…";
+      photoStatus.className = "status busy";
+      uploadImage(c, item.image, file)
+        .then(function () {
+          photoStatus.textContent = "Listo ✓";
+          photoStatus.className = "status ok";
+        })
+        .catch(function (err) {
+          photoStatus.textContent = "Error: " + err.message;
+          photoStatus.className = "status err";
+        });
+    }
+    fileInput.addEventListener("change", function () { handlePhoto(fileInput.files[0]); });
+    ["dragover", "dragenter"].forEach(function (evt) {
+      drop.addEventListener(evt, function (e) { e.preventDefault(); drop.classList.add("drag"); });
+    });
+    ["dragleave", "dragend", "drop"].forEach(function (evt) {
+      drop.addEventListener(evt, function () { drop.classList.remove("drag"); });
+    });
+    drop.addEventListener("drop", function (e) {
+      e.preventDefault();
+      var file = e.dataTransfer.files && e.dataTransfer.files[0];
+      if (file) handlePhoto(file);
+    });
+
+    upBtn.addEventListener("click", function () {
+      if (index === 0) return;
+      var tmp = aboutState.items[index - 1];
+      aboutState.items[index - 1] = aboutState.items[index];
+      aboutState.items[index] = tmp;
+      renderAboutPhotos();
+    });
+    downBtn.addEventListener("click", function () {
+      if (index === aboutState.items.length - 1) return;
+      var tmp = aboutState.items[index + 1];
+      aboutState.items[index + 1] = aboutState.items[index];
+      aboutState.items[index] = tmp;
+      renderAboutPhotos();
+    });
+    delBtn.addEventListener("click", function () {
+      if (!confirm("¿Sacar esta foto del carrusel?")) return;
+      aboutState.items.splice(index, 1);
+      renderAboutPhotos();
+    });
+
+    return card;
+  }
+
+  addAboutBtn.addEventListener("click", function () {
+    aboutState.items.push({ image: "", alt: "" });
+    renderAboutPhotos();
+  });
+
+  saveAboutBtn.addEventListener("click", function () {
+    var c = requireToken(saveAboutStatus);
+    if (!c) return;
+    var missing = aboutState.items.some(function (it) { return !it.image; });
+    if (missing && !confirm("Hay fotos sin imagen subida todavía. ¿Guardar igual?")) return;
+
+    saveAboutStatus.textContent = "Guardando…";
+    saveAboutStatus.className = "status busy";
+    saveAboutBtn.disabled = true;
+
+    var json = JSON.stringify(aboutState.items, null, 2) + "\n";
+    var base64 = b64EncodeUnicode(json);
+
+    putFile(c, "about.json", base64, aboutState.sha, "Update about.json via admin panel")
+      .then(function (res) {
+        aboutState.sha = res.content.sha;
+        saveAboutStatus.textContent = "Guardado ✓ — el sitio se actualiza en 1-2 min.";
+        saveAboutStatus.className = "status ok";
+      })
+      .catch(function (err) {
+        saveAboutStatus.textContent = "Error: " + err.message;
+        saveAboutStatus.className = "status err";
+      })
+      .then(function () { saveAboutBtn.disabled = false; });
+  });
+
   /* ---------- Menu editor ---------- */
   var dishesEl = document.getElementById("dishes");
   var addDishBtn = document.getElementById("addDish");
@@ -504,6 +731,7 @@
     priceLabel.textContent = "Precio";
     var priceInput = document.createElement("input");
     priceInput.type = "text";
+    priceInput.inputMode = "numeric";
     priceInput.value = item.price || "";
     priceInput.placeholder = "$0.000";
     priceWrap.appendChild(priceLabel);
@@ -574,7 +802,11 @@
 
     nameInput.addEventListener("input", function () { item.name = nameInput.value; });
     descInput.addEventListener("input", function () { item.description = descInput.value; });
-    priceInput.addEventListener("input", function () { item.price = priceInput.value; });
+    priceInput.addEventListener("input", function () {
+      var formatted = formatPrice(priceInput.value);
+      priceInput.value = formatted;
+      item.price = formatted;
+    });
     tagInput.addEventListener("input", function () { item.tag = tagInput.value; });
 
     function handlePhoto(file) {
@@ -672,6 +904,7 @@
       .then(function () { saveBtn.disabled = false; });
   });
 
+  loadAbout();
   loadMenu();
 })();
 </script>

@@ -34,34 +34,59 @@
 /* =========================================================
    Scroll reveal (elements slide/fade in on scroll)
    ========================================================= */
+/* Uses the standalone `translate`/`scale` properties (not `transform`) so
+   this animation never fights with a component's own hover `transform`
+   transition — those are two independent properties that can each carry
+   their own transition timing without one clobbering the other. */
 .reveal {
   opacity: 0;
-  transform: translateY(42px);
+  translate: 0 42px;
+  scale: 1;
   transition: opacity 0.75s cubic-bezier(0.16, 0.84, 0.44, 1),
-    transform 0.75s cubic-bezier(0.16, 0.84, 0.44, 1);
-  will-change: opacity, transform;
+    translate 0.75s cubic-bezier(0.16, 0.84, 0.44, 1),
+    scale 0.75s cubic-bezier(0.16, 0.84, 0.44, 1);
+  will-change: opacity, translate, scale;
 }
 
-.reveal--left { transform: translateX(-56px); }
-.reveal--right { transform: translateX(56px); }
-.reveal--up { transform: translateY(42px); }
-.reveal--scale { transform: scale(0.88); }
+.reveal--left { translate: -56px 0; }
+.reveal--right { translate: 56px 0; }
+.reveal--up { translate: 0 42px; }
+.reveal--scale { translate: 0 0; scale: 0.88; }
 
 .reveal.is-visible {
   opacity: 1;
-  transform: translate(0, 0) scale(1);
+  translate: 0 0;
+  scale: 1;
 }
 
 .feature-strip .feature.reveal:nth-child(2) { transition-delay: 0.08s; }
 .feature-strip .feature.reveal:nth-child(3) { transition-delay: 0.16s; }
 .feature-strip .feature.reveal:nth-child(4) { transition-delay: 0.24s; }
 
-.about-list.reveal li { transition: opacity 0.4s ease, transform 0.4s ease; }
+.about-list.reveal li { transition: opacity 0.4s ease, translate 0.4s ease; }
+
+/* Elements that also carry their own hover `transition` (menu cards, buttons)
+   would otherwise let that rule win the cascade and silently drop the
+   reveal transition. Re-declare the full list here so both play nice. */
+.menu-card.reveal {
+  transition: opacity 0.75s cubic-bezier(0.16, 0.84, 0.44, 1),
+    translate 0.75s cubic-bezier(0.16, 0.84, 0.44, 1),
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.btn.reveal {
+  transition: opacity 0.75s cubic-bezier(0.16, 0.84, 0.44, 1),
+    translate 0.75s cubic-bezier(0.16, 0.84, 0.44, 1),
+    transform 0.12s ease,
+    box-shadow 0.12s ease;
+}
 
 @media (prefers-reduced-motion: reduce) {
   .reveal {
     opacity: 1 !important;
-    transform: none !important;
+    translate: 0 0 !important;
+    scale: 1 !important;
     transition: none !important;
   }
   .hero-visual__glow,
@@ -861,15 +886,81 @@ h1, h2, h3, h4 {
   overflow: hidden;
 }
 
-.about-photo {
+.about-carousel {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.about-carousel__track {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.6s cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+.about-carousel__slide {
+  flex: 0 0 100%;
+  width: 100%;
+  height: 100%;
+}
+
+.about-carousel__slide img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
-  transition: transform 0.5s ease;
 }
 
-.about-visual:hover .about-photo { transform: scale(1.05); }
+.about-carousel__nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 3;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--white);
+  border: var(--border-thin);
+  border-radius: 50%;
+  box-shadow: var(--shadow-hard-sm);
+  color: var(--ink);
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+
+.about-carousel__nav:hover { transform: translateY(-50%) translateX(0) scale(1.06); }
+.about-carousel__nav--prev { left: 14px; }
+.about-carousel__nav--next { right: 14px; }
+.about-carousel__nav svg { width: 20px; height: 20px; }
+
+.about-carousel__dots {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 16px;
+  z-index: 3;
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+
+.about-carousel__dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--white);
+  border: 2px solid var(--ink);
+  opacity: 0.6;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+
+.about-carousel__dot.is-active {
+  opacity: 1;
+  background: var(--yellow);
+  transform: scale(1.2);
+}
 
 .about-badge {
   position: absolute;
@@ -1335,7 +1426,7 @@ h1, h2, h3, h4 {
 
 .footer-top {
   display: grid;
-  grid-template-columns: 1.3fr 0.7fr 0.7fr 1fr;
+  grid-template-columns: 1.3fr 0.7fr 1fr;
   gap: 40px;
   padding-bottom: 50px;
 }
