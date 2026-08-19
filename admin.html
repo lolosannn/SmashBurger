@@ -223,6 +223,16 @@
   </div>
 
   <div class="panel">
+    <h2>Ubicación en Google Maps</h2>
+    <p class="small" style="margin-top:0;">
+      Pegá acá el link de Google Maps de tu local (abrí Maps, buscá la dirección, tocá "Compartir" y copiá el link).
+      Es a donde lleva el botón "Estamos acá" del sitio.
+    </p>
+    <label for="mapsUrlInput">Link de Google Maps</label>
+    <input type="text" id="mapsUrlInput" placeholder="https://maps.app.goo.gl/..." />
+  </div>
+
+  <div class="panel">
     <div class="panel-head">
       <h2>Carrusel — Nuestra historia</h2>
       <button class="btn" id="addAboutPhoto" type="button">+ Agregar foto</button>
@@ -245,6 +255,8 @@
 </div>
 
 <div class="save-bar" id="saveBar" style="display:none;">
+  <button class="btn primary" id="saveMapsUrl" type="button">Guardar ubicación</button>
+  <span class="status" id="saveMapsStatus"></span>
   <button class="btn primary" id="saveAbout" type="button">Guardar carrusel</button>
   <span class="status" id="saveAboutStatus"></span>
   <button class="btn primary" id="saveMenu" type="button">Guardar cambios en el menú</button>
@@ -368,6 +380,54 @@
     if (file.type === "image/webp") return "webp";
     return "jpg";
   }
+
+  /* ---------- Google Maps link ---------- */
+  var mapsUrlInput = document.getElementById("mapsUrlInput");
+  var saveMapsBtn = document.getElementById("saveMapsUrl");
+  var saveMapsStatus = document.getElementById("saveMapsStatus");
+  var configSha = null;
+
+  function loadConfig() {
+    getFile(cfg(), "config.json").then(function (file) {
+      if (file && file.content) {
+        configSha = file.sha;
+        try {
+          var data = JSON.parse(b64DecodeUnicode(file.content.replace(/\n/g, "")));
+          mapsUrlInput.value = data.mapsUrl || "";
+        } catch (e) { /* leave the field empty */ }
+      }
+    });
+  }
+
+  saveMapsBtn.addEventListener("click", function () {
+    var c = requireToken(saveMapsStatus);
+    if (!c) return;
+    var url = mapsUrlInput.value.trim();
+    if (!url) {
+      saveMapsStatus.textContent = "Pegá un link de Google Maps antes de guardar.";
+      saveMapsStatus.className = "status err";
+      return;
+    }
+
+    saveMapsStatus.textContent = "Guardando…";
+    saveMapsStatus.className = "status busy";
+    saveMapsBtn.disabled = true;
+
+    var json = JSON.stringify({ mapsUrl: url }, null, 2) + "\n";
+    putFile(c, "config.json", b64EncodeUnicode(json), configSha, "Update config.json via admin panel")
+      .then(function (res) {
+        configSha = res.content.sha;
+        saveMapsStatus.textContent = "Guardado ✓ — el sitio se actualiza en 1-2 min.";
+        saveMapsStatus.className = "status ok";
+      })
+      .catch(function (err) {
+        saveMapsStatus.textContent = "Error: " + err.message;
+        saveMapsStatus.className = "status err";
+      })
+      .then(function () { saveMapsBtn.disabled = false; });
+  });
+
+  loadConfig();
 
   /* ---------- Hero photo slot ---------- */
   (function heroSlot() {

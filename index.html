@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet" />
-<link rel="stylesheet" href="css/style.css" />
+<link rel="stylesheet" href="css/style.css?v=3" />
 </head>
 <body class="no-scroll">
 
@@ -176,12 +176,6 @@
       <div class="about-visual reveal reveal--left">
         <div class="about-carousel" id="aboutCarousel">
           <div class="about-carousel__track" id="aboutCarouselTrack"></div>
-          <button type="button" class="about-carousel__nav about-carousel__nav--prev" id="aboutPrev" aria-label="Foto anterior">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
-          </button>
-          <button type="button" class="about-carousel__nav about-carousel__nav--next" id="aboutNext" aria-label="Foto siguiente">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
-          </button>
           <div class="about-carousel__dots" id="aboutDots"></div>
         </div>
         <span class="about-badge">+8 años<br />en la plancha</span>
@@ -256,12 +250,12 @@
         </table>
       </div>
 
-      <div class="map-frame reveal reveal--right">
+      <a class="map-frame reveal reveal--right" id="mapFrame" href="https://www.google.com/maps" target="_blank" rel="noopener" aria-label="Abrir nuestra ubicación en Google Maps">
         <div class="map-pin">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s7-6.5 7-12a7 7 0 1 0-14 0c0 5.5 7 12 7 12Z"/><circle cx="12" cy="9" r="2.5"/></svg>
           <span>Estamos acá</span>
         </div>
-      </div>
+      </a>
     </div>
   </section>
 
@@ -441,8 +435,8 @@
   </div>
 </footer>
 
-<script src="js/main.js"></script>
-<script src="js/order.js"></script>
-<script src="js/about-carousel.js"></script>
+<script src="js/main.js?v=3"></script>
+<script src="js/order.js?v=3"></script>
+<script src="js/about-carousel.js?v=3"></script>
 </body>
 </html>
