@@ -38,13 +38,5 @@
     "price": "$19.500",
     "tag": "Ahumada",
     "image": "images/miami.jpg"
-  },
-  {
-    "id": "prueba-panel-admin",
-    "name": "prueba panel admin",
-    "description": "cheddar",
-    "price": "5000",
-    "tag": "sabor",
-    "image": "images/prueba-panel-admin.webp"
   }
 ]
