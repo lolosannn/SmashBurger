@@ -3,8 +3,6 @@
 
   var track = document.getElementById("aboutCarouselTrack");
   var dotsEl = document.getElementById("aboutDots");
-  var prevBtn = document.getElementById("aboutPrev");
-  var nextBtn = document.getElementById("aboutNext");
   var carousel = document.getElementById("aboutCarousel");
   if (!track) return;
 
@@ -25,26 +23,25 @@
     if (!slides.length) {
       track.innerHTML = '<div class="about-carousel__slide"><img src="images/denver.jpg" alt="Hamburguesa Smash Burger" /></div>';
       dotsEl.innerHTML = "";
-      prevBtn.hidden = true;
-      nextBtn.hidden = true;
       return;
     }
 
+    // No `loading="lazy"` here on purpose: these slides are moved into view
+    // with a CSS transform, not real scrolling, so the browser's native
+    // lazy-load heuristic (based on initial layout position) never
+    // re-triggers for them — on narrow viewports they'd sit permanently
+    // "off-screen" and never load at all.
     track.innerHTML = slides.map(function (s) {
       return (
         '<div class="about-carousel__slide">' +
-          '<img src="' + escapeHtml(s.image) + '" alt="' + escapeHtml(s.alt || "Smash Burger") + '" loading="lazy" />' +
+          '<img src="' + escapeHtml(s.image) + '" alt="' + escapeHtml(s.alt || "Smash Burger") + '" />' +
         '</div>'
       );
     }).join("");
 
     dotsEl.innerHTML = slides.map(function (_, i) {
-      return '<button type="button" class="about-carousel__dot' + (i === 0 ? " is-active" : "") + '" data-i="' + i + '" aria-label="Ir a la foto ' + (i + 1) + '"></button>';
+      return '<span class="about-carousel__dot' + (i === 0 ? " is-active" : "") + '"></span>';
     }).join("");
-
-    var hideNav = slides.length < 2;
-    prevBtn.hidden = hideNav;
-    nextBtn.hidden = hideNav;
 
     goTo(0);
     if (slides.length > 1) startAutoplay();
@@ -60,7 +57,6 @@
   }
 
   function next() { goTo(current + 1); }
-  function prev() { goTo(current - 1); }
 
   function startAutoplay() {
     stopAutoplay();
@@ -70,15 +66,6 @@
     if (timer) clearInterval(timer);
     timer = null;
   }
-
-  prevBtn.addEventListener("click", function () { prev(); startAutoplay(); });
-  nextBtn.addEventListener("click", function () { next(); startAutoplay(); });
-  dotsEl.addEventListener("click", function (e) {
-    var dot = e.target.closest(".about-carousel__dot");
-    if (!dot) return;
-    goTo(parseInt(dot.dataset.i, 10));
-    startAutoplay();
-  });
 
   carousel.addEventListener("mouseenter", stopAutoplay);
   carousel.addEventListener("mouseleave", function () { if (slides.length > 1) startAutoplay(); });

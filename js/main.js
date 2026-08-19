@@ -76,6 +76,17 @@
   // Safety net: never trap the user behind the preloader.
   setTimeout(finishPreload, 5000);
 
+  /* ---------- Site config (Google Maps link, editable from admin.html) ---------- */
+  var mapFrame = document.getElementById("mapFrame");
+  if (mapFrame) {
+    fetch("config.json", { cache: "no-store" })
+      .then(function (res) { return res.json(); })
+      .then(function (data) {
+        if (data && data.mapsUrl) mapFrame.href = data.mapsUrl;
+      })
+      .catch(function () { /* keep the default href */ });
+  }
+
   /* ---------- Header scroll state ---------- */
   var header = document.getElementById("siteHeader");
   function onScroll() {
@@ -103,7 +114,8 @@
   });
 
   /* ---------- Scroll reveal (replays every time an element enters view) ---------- */
-  var revealIO = new IntersectionObserver(function (entries) {
+  var canObserve = "IntersectionObserver" in window;
+  var revealIO = canObserve && new IntersectionObserver(function (entries) {
     entries.forEach(function (entry) {
       entry.target.classList.toggle("is-visible", entry.isIntersecting);
     });
@@ -113,6 +125,12 @@
     (root || document).querySelectorAll(".reveal").forEach(function (el) {
       if (el.dataset.revealObserved) return;
       el.dataset.revealObserved = "1";
+      // No IntersectionObserver support: skip the animation and just show
+      // the content, instead of leaving it stuck at opacity:0 forever.
+      if (!canObserve) {
+        el.classList.add("is-visible");
+        return;
+      }
       revealIO.observe(el);
     });
   }
