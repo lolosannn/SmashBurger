@@ -454,7 +454,7 @@ h1, h2, h3, h4 {
   left: 50%;
   transform: translate(-50%, -50%);
   font-family: var(--font-display);
-  font-size: clamp(6rem, 22vw, 18rem);
+  font-size: clamp(6rem, 16vw, 13rem);
   color: var(--cream-dark);
   z-index: 0;
   white-space: nowrap;
@@ -513,6 +513,14 @@ h1, h2, h3, h4 {
   justify-content: center;
   min-width: 0;
   min-height: 480px;
+}
+
+.hero-visual__word-clip {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  z-index: 0;
+  pointer-events: none;
 }
 
 .hero-visual__glow {
