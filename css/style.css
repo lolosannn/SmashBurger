@@ -235,6 +235,24 @@ h1, h2, h3, h4 {
 
 .btn--sm { padding: 10px 20px; font-size: 0.9rem; }
 
+.order-float {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 400;
+}
+
+@media (max-width: 720px) {
+  .order-float {
+    right: 16px;
+    bottom: 16px;
+    padding: 12px 22px;
+    font-size: 0.9rem;
+  }
+
+  .footer-bottom { padding-bottom: 64px; }
+}
+
 /* =========================================================
    Preloader
    ========================================================= */

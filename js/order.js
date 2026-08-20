@@ -325,7 +325,8 @@
   var openBtns = [
     document.getElementById("openOrderHeader"),
     document.getElementById("openOrderCta"),
-    document.getElementById("openOrderMobile")
+    document.getElementById("openOrderMobile"),
+    document.getElementById("openOrderFloating")
   ];
   openBtns.forEach(function (btn) {
     if (btn) btn.addEventListener("click", openOrderView);
