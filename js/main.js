@@ -58,6 +58,16 @@
       revealMaroon.remove();
       body.classList.remove("no-scroll");
       observeReveals(document);
+
+      // A tap on an anchor link (e.g. "Ver menú") during the preload lock
+      // above updates the URL hash but can't actually scroll (the body is
+      // still locked), so the jump gets silently dropped and the button
+      // looks like it needs a second tap. Finish that scroll now that
+      // scrolling is possible again.
+      if (location.hash) {
+        var target = document.querySelector(location.hash);
+        if (target) target.scrollIntoView({ behavior: "smooth" });
+      }
     }, 1950);
   }
 

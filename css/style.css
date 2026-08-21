@@ -1091,6 +1091,15 @@ h1, h2, h3, h4 {
   font-size: 0.85rem;
 }
 
+.map-pin__hint {
+  color: var(--ink-soft);
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.map-frame:hover .map-pin__hint,
+.map-frame:focus-visible .map-pin__hint { color: var(--red); }
+
 /* =========================================================
    CTA banner
    ========================================================= */
